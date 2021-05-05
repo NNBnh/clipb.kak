@@ -1,84 +1,72 @@
-# kakboard
+<h1 align="center"><code>clipb</code></h1>
+<p align="center">Clipboard managers warper that <i>SuperB</i></p>
+<p align="center"><img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/281/clipboard_1f4cb.png"></p>
+<p align="center"><a href="https://github.com/NNBnh/clipb/blob/main/LICENSE"><img src="https://img.shields.io/github/license/NNBnh/clipb?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"></a> <img src="https://img.shields.io/badge/development-completed-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Development completed"></p>
+<p align="center"><a href="https://github.com/NNBnh/clipb/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/clipb?labelColor=073551&color=4EAA25&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/clipb?labelColor=073551&color=4EAA25&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb/network/members"><img src="https://img.shields.io/github/forks/NNBnh/clipb?labelColor=073551&color=4EAA25&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb/issues"><img src="https://img.shields.io/github/issues/NNBnh/clipb?labelColor=073551&color=4EAA25&style=flat-square"></a></p>
 
-Clipboard integration for [kakoune](https://kakoune.org).
+## 💡 About
+`clipb` is a *SuperB* clipboard managers warper written in [`portable sh`](https://github.com/dylanaraps/pure-sh-bible) that wraps various system-specific tools for interacting with a system clipboard.
 
+## 🚀 Setup
+### 🧾 Dependencies
+- `sh` to process
+- [`wl-clipboard`](https://github.com/bugaevc/wl-clipboard) for [Wayland](https://wayland.freedesktop.org)
+- [`xclip`](https://github.com/astrand/xclip) or [`xsel`](http://www.kfish.org/software/xsel) for [X.org](https://www.x.org)
+- [`termux-api`](https://wiki.termux.com/wiki/Termux:API) for [Termux](https://termux.com/)
 
-## Installation
+### 📥 Installation
+#### 🔧 Manually
+- Option 1: using `curl`
 
-### With [plug.kak](https://github.com/andreyorst/plug.kak) (recommended)
-
-Just add this to your `kakrc`:
+```sh
+curl https://raw.githubusercontent.com/NNBnh/clipb/main/bin/clipb > ~/.local/bin/clipb
+chmod +x ~/.local/bin/clipb
 ```
-plug "lePerdu/kakboard" %{
-    hook global WinCreate .* %{ kakboard-enable }
-}
+
+- Option 2: using `git`
+
+```sh
+git clone https://github.com/NNBnh/clipb.git ~/.local/share/clipb
+ln -s ~/.local/share/clipb/bin/clipb ~/.local/bin/clipb
 ```
 
-### Manually
+#### 📦 Package manager
+For [`bpkg`](https://github.com/bpkg/bpkg) user:
 
-Clone this repository and `source` the file `kakboard.kak` in your `kakrc`, then
-set it up to run with:
+```sh
+bpkg install NNBnh/clipb
 ```
-hook global WinCreate .* %{ kakboard-enable }
+
+For [Basher](https://github.com/bpkg/bpkg) user:
+
+```sh
+basher install NNBnh/clipb
 ```
 
+> *If you can and want to port Clipb to other package managers, feel free to do so.*
 
-## Usage
+## ⌨️ Usage
+Copy `TEXTS` to clipboard:
 
-Just copy and paste with the normal commands (`y`, `c`, `p`, `R`, etc.)! Copy
-keys copy the main selection to the system clipboard and paste commands sync the
-system clipboard with the `"` register before executing. Copying/pasting to/from
-the system clipboard can be prevented by specifying a register to use, even the
-default `"` register.
+```sh
+clipb copy TEXTS
+```
 
-### Configuration
+Paste from clipboard:
 
-The `kakboard_copy_cmd` and `kakboard_paste_cmd` options specify the commands to
-copy to and paste from the system clipboard. If they are unset, kakboard will
-try to detect command pair to use.
+```sh
+clipb paste
+```
 
-Currently supports:
+## 💌 Credits
+Special thanks to:
+- [**Kakboard**](https://github.com/lePerdu/kakboard) by [Zach Peltzer](https://github.com/lePerdu)
+- [**Vis-clipboard**](https://github.com/martanne/vis) by [Marc André Tanner](https://github.com/martanne)
 
-- [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (Wayland)
-- [xsel](http://www.kfish.org/software/xsel/)
-- [xclip](https://github.com/astrand/xclip)
-- pbcopy/pbpaste (macOS)
+<br><br><br><br>
 
-To change the keys for which clipboard syncing is done, just set the
-`kakboard_copy_keys` and `kakboard_paste_keys` options.
+---
 
-Note: This plugin will map all of the keys in `kakboard_paste_keys` and
-`kakboard_copy_keys`, so if you already have mappings for these keys, you will
-have to edit those bindings to call `kakboard-{pull,push}-if-unset` to sync the
-clipboard after copying / before pasting and remove said keys from kakboard's
-lists.
-
-### Commands
-
-- `kakboard-enable`/`kakboard-disable`/`kakboard-toggle`: enable/disable/toggle
-  clipboard integration
-- `kakboard-pull-clipboard`: Pull system clipboard into the `"` register.
-- `kakboard-pull-if-unset`: Call `kakboard-pull-clipboard` if
-  `%val{register}` is empty.
-- `kakboard-with-pull-clipboard <keys>`: Call `kakboard-pull-if-unset` then
-  execute `<keys>`.
-- `kakboard-push-clipboard`: Set system clipboard from the `"` register.
-- `kakboard-push-if-unset`: Call `kakboard-push-clipboard` if
-  `%val{register}` is empty.
-- `kakboard-with-push-clipboard <keys>`: Execute `<kys>` then call
-  `kakboard-push-if-unset`
-
-
-## Limitations
-
-System clipboards don't support multiple selections, so only the primary
-selection is copied to the clipboard. Correspondingly, when the `"` register is
-synced to the system clipboard, it is filled with a single value and remaining
-values, if any, are deleted. To get around this, the `"` register can be
-specified explicitly when pasting multiple selections (before syncing with the
-system clipboard) as mentioned above.
-
-
-## License
-
-MIT License
+> <h1 align="center">Made with ❤️ by <a href="https://github.com/NNBnh"><i>NNB</i></a></h1>
+>
+> <p align="center"><a href="https://www.buymeacoffee.com/nnbnh"><img src="https://img.shields.io/badge/buy_me_a_coffee%20-%23F7CA88.svg?logo=buy-me-a-coffee&logoColor=333333&style=for-the-badge" alt="Buy Me a Coffee"></p>
