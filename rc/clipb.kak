@@ -33,18 +33,6 @@
 #    SOFTWARE.
 
 # Functions
-define-command clipb-set -docstring 'set system clipboard from the " register' %{
-	evaluate-commands %sh{
-		printf '%s' "$kak_main_reg_dquote" | eval "$kak_opt_clipb_set_command" &
-	}
-}
-
-define-command clipb-get -docstring 'get system clipboard into the " register' %{
-	set-register dquote %sh{
-		eval "$kak_opt_clipb_get_command"
-	}
-}
-
 define-command clipb-detect -docstring 'detect clipboard command' %{
 	evaluate-commands %sh{
 		case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -62,7 +50,7 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 						 copy_command='wl-copy'
 						paste_command='wl-paste --no-newline'
 					else
-						printf '%s\n%s' "echo -debug \"clipb.kak: can't interact with Wayland's clipboard\""
+						printf '%s\n%s' "echo -debug \"clipb.kak: can't interact with Wayland's clipboard\"" \
 						                "echo -debug \"please install 'wl-clipboard'\""
 
 						exit 1
@@ -75,7 +63,7 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 						 copy_command='xsel --input  --clipboard'
 						paste_command='xsel --output --clipboard'
 					else
-						printf '%s\n%s' "echo -debug \"clipb.kak: can't interact with Xorg's clipboard\""
+						printf '%s\n%s' "echo -debug \"clipb.kak: can't interact with Xorg's clipboard\"" \
 						                "echo -debug \"please install 'xclip' or 'xsel'\""
 
 						exit 1
@@ -93,8 +81,20 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 			;;
 		esac
 
-		printf '%s\n%s' "set-option global clipb_set_command '$copy_command'"
+		printf '%s\n%s' "set-option global clipb_set_command '$copy_command'" \
 		                "set-option global clipb_get_command '$paste_command'"
+	}
+}
+
+define-command clipb-set -docstring 'set system clipboard from the " register' %{
+	nop %sh{
+		printf '%s' "$kak_main_reg_dquote" | eval "$kak_opt_clipb_set_command" >/dev/null 2>&1 &
+	}
+}
+
+define-command clipb-get -docstring 'get system clipboard into the " register' %{
+	set-register dquote %sh{
+		eval "$kak_opt_clipb_get_command"
 	}
 }
 
