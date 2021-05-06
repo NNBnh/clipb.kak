@@ -88,7 +88,7 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 
 define-command clipb-set -docstring 'set system clipboard from the " register' %{
 	nop %sh{
-		fi [ "$kak_opt_clipb_multiple_selections" = 'true' ]; then
+		if [ "$kak_opt_clipb_multiple_selections" = 'true' ]; then
 			clipboard="$kak_reg_dquote"
 		else
 			clipboard="$kak_main_reg_dquote"
