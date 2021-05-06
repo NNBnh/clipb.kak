@@ -88,7 +88,13 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 
 define-command clipb-set -docstring 'set system clipboard from the " register' %{
 	nop %sh{
-		printf '%s' "$kak_reg_dquote" | eval "$kak_opt_clipb_set_command" >/dev/null 2>&1 &
+		fi [ "$kak_opt_clipb_multiple_selections" = 'true' ]; then
+			clipboard="$kak_reg_dquote"
+		else
+			clipboard="$kak_main_reg_dquote"
+		fi
+
+		printf '%s' "$clipboard" | eval "$kak_opt_clipb_set_command" >/dev/null 2>&1 &
 	}
 }
 
@@ -113,5 +119,7 @@ define-command clipb-disable -docstring 'disable clipb' %{
 # Values
 declare-option -docstring 'command to copy to clipboard'    str clipb_set_command 'clipb copy'
 declare-option -docstring 'command to paste from clipboard' str clipb_get_command 'clipb paste'
+
+declare-option -docstring 'multiple selections copy to clipboard feature' bool clipb_multiple_selections 'false'
 
 clipb-detect

@@ -1,5 +1,6 @@
 <h1 align="center"><code>clipb.kak</code></h1>
 <p align="center">Clipboard managers warper for Kakoune</p>
+<p align="center"><img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/281/clipboard_1f4cb.png"></p>
 <p align="center"><a href="https://github.com/NNBnh/clipb.kak/blob/main/LICENSE"><img src="https://img.shields.io/github/license/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=for-the-badge" alt="License: GPL-3.0"></a> <img src="https://img.shields.io/badge/development-completed-%23F7CA88.svg?labelColor=585858&style=for-the-badge&logoColor=FFFFFF" alt="Development completed"></p>
 <p align="center"><a href="https://github.com/NNBnh/clipb.kak/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/network/members"><img src="https://img.shields.io/github/forks/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/issues"><img src="https://img.shields.io/github/issues/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a></p>
 
@@ -7,29 +8,44 @@
 `clipb.kak` is a clipboard integration for [Kakoune](http://kakoune.org), an extremely strip down fork of [Kakboard](https://github.com/lePerdu/kakboard) with [some improvements and more clipboard managers supported](#-features).
 
 ### 📔 Story
-`#TODO`
+After making [`clipb`](https://github.com/NNBnh/clipb) i revisit [Kakboard](https://github.com/lePerdu/kakboard) and try to improve the plugin by make some pull request. But because i had make a lot of change that might break people existing config, i decided to maintain my own fork of the plugin.
 
 ### ✨ Features
-`#TODO`
+- Improve startup speed, took ~20ms less time to startup than [Kakoune](http://kakoune.org)
+- Support multiple selections copy to clipboard [(enable this feature)](https://github.com/NNBnh/clipb.kak#%EF%B8%8F-configuration)
+- Remove plugin keybinding to follow [Steve Losh's blog: "Mapping Keys the Right Way"](https://stevelosh.com/blog/2011/09/writing-vim-plugins/#s6-mapping-keys-the-right-way), instead use register hook to sync clipboard
+- Remove unnecessary commands:
+  - `pull-if-unset`: the `clipb-enable` command is somewhat do the same thing, this command is pretty handy in the [Kakboard script](https://github.com/lePerdu/kakboard/blob/2f13f5cd99591b76ad5cba230815b80138825120/kakboard.kak#L50-L60) but the end users will not found it really useful
+  - `push-if-unset`: again with this command, the end users will not found it really useful
+  - `with-pull-clipboard`: user can simply done this with `clipb-get; exec <key>`
+  - `with-push-clipboard`: again, user can simply run `exec <key>; clipb-set`
+- More system clipboards supported, supported clipboard managers are:
+  - [`wl-clipboard`](https://github.com/bugaevc/wl-clipboard)
+  - [`xclip`](https://github.com/astrand/xclip)
+  - [`xsel`](http://www.kfish.org/software/xsel)
+  - `pbcopy`, `pbpaste`
+  - `cygwin`'s `/dev/clipboard`
+  - [`termux-api`](https://wiki.termux.com/wiki/Termux:API)
 
 ## 🚀 Setup
 ### 🧾 Dependencies
 - [`wl-clipboard`](https://github.com/bugaevc/wl-clipboard) for [Wayland](https://wayland.freedesktop.org)
 - [`xclip`](https://github.com/astrand/xclip) or [`xsel`](http://www.kfish.org/software/xsel) for [X.org](https://www.x.org)
-- [`termux-api`](https://wiki.termux.com/wiki/Termux:API) for [Termux](https://termux.com/)
+- [`termux-api`](https://wiki.termux.com/wiki/Termux:API) for [Termux](https://termux.com)
 
 ### 📥 Installation
 With [`plug.kak`](https://github.com/robertmeta/plug.kak) just put this in your `kakrc`:
 
 ```
 plug 'NNBnh/clipb.kak' config %{
+	clipb-detect
 	clipb-enable
 }
 ```
 
 ## ⌨️ Usage
 `clipb.kak` come with many commands:
-- `clipb-detect`: detect clipboard command
+- `clipb-detect`: detect clipboard command on the system to set `clipb_set_command` and `clipb_get_command` options
 - `clipb-set`: set system clipboard from the `"` (default) register
 - `clipb-get`: get system clipboard into the `"` (default) register
 - `clipb-enable`: enable clipb by adding these hooks:
@@ -38,14 +54,26 @@ plug 'NNBnh/clipb.kak' config %{
   hook -group 'clipb' global FocusIn          .* %{ clipb-get }
   hook -group 'clipb' global RegisterModified \" %{ clipb-set }
   ```
-- `clipb-disable`: disable clipb by removing `clipb` hooks
+- `clipb-disable`: disable clipb by removing `clipb` group hooks
 
 ## ⚙️ Configuration
-`#TODO`
+To enable multiple selections copy to clipboard, change the `clipb_multiple_selections` option to `true`:
+
+```
+set-option global clipb_multiple_selections 'true'
+```
+
+You can change the set or get (copy or paste) command manually:
 
 ```
 set-option global clipb_set_command '<SET_COMMAND>'
 set-option global clipb_get_command '<GET_COMMAND>'
+```
+
+or let the plugin detect the clipboard commands on the system:
+
+```
+clipb-detect
 ```
 
 ## 💌 Credits
