@@ -5,17 +5,17 @@
 <p align="center"><a href="https://github.com/NNBnh/clipb.kak/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/network/members"><img src="https://img.shields.io/github/forks/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a> <a href="https://github.com/NNBnh/clipb.kak/issues"><img src="https://img.shields.io/github/issues/NNBnh/clipb.kak?labelColor=585858&color=F7CA88&style=flat-square"></a></p>
 
 ## 💡 About
-`clipb.kak` is a clipboard integration for [Kakoune](http://kakoune.org), an extremely strip down fork of [Kakboard](https://github.com/lePerdu/kakboard) with [some improvements and more clipboard managers supported](#-features).
+`clipb.kak` is a clipboard integration for [Kakoune](http://kakoune.org), an extremely strip down fork of [Zach Peltzer](https://github.com/lePerdu)'s [Kakboard](https://github.com/lePerdu/kakboard) with [some design improvements](#-features).
 
 ### 📔 Story
 After making [`clipb`](https://github.com/NNBnh/clipb) i revisit [Kakboard](https://github.com/lePerdu/kakboard) and try to improve the plugin by make some pull request. But because i had make a lot of change that might break people existing config, i decided to maintain my own fork of the plugin.
 
 ### ✨ Features
-- Improve startup speed, took ~20ms less time to startup than [Kakoune](http://kakoune.org)
+- Improve startup speed, took ~20ms less time to startup than [Kakboard](https://github.com/lePerdu/kakboard)
 - Support multiple selections copy to clipboard [(enable this feature)](https://github.com/NNBnh/clipb.kak#%EF%B8%8F-configuration)
-- Remove plugin keybinding to follow [Steve Losh's blog: "Mapping Keys the Right Way"](https://stevelosh.com/blog/2011/09/writing-vim-plugins/#s6-mapping-keys-the-right-way), instead use register hook to sync clipboard
-- Remove unnecessary commands:
-  - `pull-if-unset`: the `clipb-enable` command is somewhat do the same thing, this command is pretty handy in the [Kakboard script](https://github.com/lePerdu/kakboard/blob/2f13f5cd99591b76ad5cba230815b80138825120/kakboard.kak#L50-L60) but the end users will not found it really useful
+- Have no plugin keybinding to follow [Steve Losh's blog: "Mapping Keys the Right Way"](https://stevelosh.com/blog/2011/09/writing-vim-plugins/#s6-mapping-keys-the-right-way), instead use register hook to sync clipboard
+- Remove unnecessary commands from [Kakboard](https://github.com/lePerdu/kakboard):
+  - `pull-if-unset`: this command is pretty handy in the [Kakboard script](https://github.com/lePerdu/kakboard/blob/2f13f5cd99591b76ad5cba230815b80138825120/kakboard.kak#L50-L60) but the end users will not found it really useful and fairly easy to script if need
   - `push-if-unset`: again with this command, the end users will not found it really useful
   - `with-pull-clipboard`: user can simply done this with `clipb-get; exec <key>`
   - `with-push-clipboard`: again, user can simply run `exec <key>; clipb-set`
@@ -85,6 +85,6 @@ Special thanks to:
 
 ---
 
-> <h1 align="center">Made with ❤️ by <a href="https://github.com/NNBnh"><i>NNB</i></a></h1>
+> <h1 align="center">Fork with ❤️ by <a href="https://github.com/NNBnh"><i>NNB</i></a></h1>
 >
 > <p align="center"><a href="https://www.buymeacoffee.com/nnbnh"><img src="https://img.shields.io/badge/buy_me_a_coffee%20-%23F7CA88.svg?logo=buy-me-a-coffee&logoColor=333333&style=for-the-badge" alt="Buy Me a Coffee"></p>
