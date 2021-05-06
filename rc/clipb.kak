@@ -88,14 +88,25 @@ define-command clipb-detect -docstring 'detect clipboard command' %{
 
 define-command clipb-set -docstring 'set system clipboard from the " register' %{
 	nop %sh{
-		printf '%s' "$kak_main_reg_dquote" | eval "$kak_opt_clipb_set_command" >/dev/null 2>&1 &
+		printf '%s' "$kak_reg_dquote" | eval "$kak_opt_clipb_set_command" >/dev/null 2>&1 &
 	}
 }
 
 define-command clipb-get -docstring 'get system clipboard into the " register' %{
-	set-register dquote %sh{
-		eval "$kak_opt_clipb_get_command"
+	evaluate-commands %sh{
+		[ "$kak_reg_dquote" != "$(eval "$kak_opt_clipb_get_command")" ] \
+		&& printf '%s' 'set-register dquote %sh{ eval "$kak_opt_clipb_get_command" }'
 	}
+}
+
+define-command clipb-enable -docstring 'enable clipb' %{
+	hook -group 'clipb' global WinCreate        .* %{ clipb-get }
+	hook -group 'clipb' global FocusIn          .* %{ clipb-get }
+	hook -group 'clipb' global RegisterModified \" %{ clipb-set }
+}
+
+define-command clipb-disable -docstring 'disable clipb' %{
+	remove-hooks global 'clipb'
 }
 
 
@@ -104,9 +115,3 @@ declare-option -docstring 'command to copy to clipboard'    str clipb_set_comman
 declare-option -docstring 'command to paste from clipboard' str clipb_get_command 'clipb paste'
 
 clipb-detect
-
-
-# Start
-hook -group 'clipb' global WinCreate        .* %{ clipb-get }
-hook -group 'clipb' global FocusIn          .* %{ clipb-get }
-hook -group 'clipb' global RegisterModified \" %{ clipb-set }
