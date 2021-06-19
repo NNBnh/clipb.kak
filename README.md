@@ -35,7 +35,6 @@ After making [`clipb`](https://github.com/NNBnh/clipb) i revisit [Kakboard](http
 
 ### 📥 Installation
 With [`plug.kak`](https://github.com/robertmeta/plug.kak) just put this in your `kakrc`:
-
 ```
 plug 'NNBnh/clipb.kak' config %{
 	clipb-detect
@@ -58,20 +57,17 @@ plug 'NNBnh/clipb.kak' config %{
 
 ## ⚙️ Configuration
 To enable multiple selections copy to clipboard, change the `clipb_multiple_selections` option to `true`:
-
 ```
 set-option global clipb_multiple_selections 'true'
 ```
 
 You can change the set or get (copy or paste) command manually:
-
 ```
 set-option global clipb_set_command '<SET_COMMAND>'
 set-option global clipb_get_command '<GET_COMMAND>'
 ```
 
 or let the plugin detect the clipboard commands on the system:
-
 ```
 clipb-detect
 ```
